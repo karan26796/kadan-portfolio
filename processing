@@ -1,0 +1,54 @@
+import processing.serial.*;    // Importing the serial library to communicate with the Arduino
+Serial myPort;      // Initializing a vairable named 'myPort' for serial communication
+float background_color ;   // Variable for changing the background color
+String input;
+String[] inputC;
+float inputX, inputY;
+float rad, angle;
+float p, q;
+
+void setup ( ) {
+
+  size (1024, 1024);
+  translate(512, 512);
+  rotate(90);
+  colorMode(HSB, 360, 100, 100);
+  myPort  =  new Serial (this, "COM3", 9600); // Set the com port and the baud rate according to the 
+  
+  Arduino IDE
+  myPort.bufferUntil ( '\n' );   // Receiving the data from the Arduino IDE
+}
+
+void serialEvent  (Serial myPort) {
+  input= myPort.readString();
+  inputC= split(input, '|');
+  inputX = Float.parseFloat(inputC[0]);
+  inputY = Float.parseFloat(inputC[1]);
+
+  p = inputX-512;
+  q = 512-inputY;
+
+  float pSqrt=sq(p)+ sq(q);
+  rad= sqrt(pSqrt);
+
+  rad=100*rad/(512*1.414);
+  float k=180/3.1428;
+
+  angle=k*atan(q/p);
+  
+  if (p<0 && q>0) {
+    angle=180+angle;
+  }
+  if (p<0 && q<0) {
+    angle=180+angle;
+  }
+  if (p>0 && q<0) {
+    angle=360+angle;
+  }
+}
+
+void draw ( ) {
+  noStroke();
+  fill ( angle, rad, 88 );
+  circle(inputX, inputY, 100);
+}
