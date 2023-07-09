@@ -1,0 +1,22 @@
+        int xValue = 0;
+        int yValue = 1;// Initializing the JOYSTICK pin
+        int X, Y;    // Declaring a variable for JOYSTICK output
+
+        void setup ( ) {
+          pinMode(led_pin, OUTPUT); // Declaring the LED pin as output pin
+          Serial.begin(9600);       // Starting the serial communication at 9600 baud rate
+        }
+
+        void loop ( ) {
+          X = analogRead (xValue); // Reading from the JOYSTICK X
+          Y = analogRead (yValue); // Reading from the JOYSTICK Y
+
+          int xAxis = map (X, 0, 1023, 0, 255); // Mapping the output of JOYSTICK to 0-255 to be read by the Processing IDE
+          int yAxis = map (Y, 0, 1023, 0, 255);
+          int coordinates[2] = {xAxis, yAxis };
+
+          Serial.print (coordinates[0]);     // Sending the output to Processing IDE
+          Serial.print ("|");
+          Serial.println (coordinates[1]);
+
+          delay(5);}
